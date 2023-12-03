@@ -1,4 +1,3 @@
-
 <template>
   <q-page class="flex flex-center">
     <div class="q-pa-md" style="width: 350px; background-color: rgba(61, 221, 205, 0.2); border-radius: 10px;">
@@ -73,8 +72,10 @@ export default defineComponent({
 
         const accessToken = response.data.accessToken;
         const roleId = response.data.role_id;
+        const userId = response.data.id;
 
         localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("userId", userId);
 
         this.$q.notify({
           color: "green-4",
@@ -86,7 +87,7 @@ export default defineComponent({
         console.log(response.data);
 
         // Check if roleId is a number (remove quotes around 1)
-        this.$router.push(parseInt(roleId, 10) === 1 ? "/EqStaff" : "/home");
+        this.$router.push(parseInt(roleId, 10) === 1 ? "/EqStaff" : "/user/home");
 
       } catch (error) {
         console.log("Login error", error);
@@ -101,4 +102,3 @@ export default defineComponent({
   },
 });
 </script>
-
