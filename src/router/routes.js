@@ -4,10 +4,11 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
+     
       { path: '/board', component: () => import('pages/Staff/BoardPage.vue') },
       { path: '/add', component: () => import('pages/Staff/CreateToolPage.vue') },
       { path: '/EqStaff', component: () => import('pages/Staff/StaffEqPage.vue') },
-      { path: '/update/:id', name: 'update', component: () => import('pages/Staff/UpdatePage.vue'), props: true },
+      { path: '/update/:id', name: 'update', component: () => import('pages/Staff/UpdatePage.vue'), props: true, },
 
       { path: '/signup', component: () => import('pages/SignupPage.vue') },
       { path: '/login', component: () => import('pages/LoginPage.vue') },
