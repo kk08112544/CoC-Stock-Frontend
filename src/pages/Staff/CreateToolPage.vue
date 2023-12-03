@@ -79,7 +79,7 @@ export default {
         });
         console.log('Equipment created successfully:', equipCreateResponse.data);
 
-        this.$router.push('/EqStaff');
+        this.$router.push('/test');
 
       } catch (error) {
         console.error('Error creating equipment:', error);
