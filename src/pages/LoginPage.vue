@@ -16,9 +16,9 @@
               type="password"
               v-model="password"
               label="Enter password"
-              lazy-rules
-              :rules="passwordRules"
             />
+            <!-- lazy-rules
+              :rules="passwordRules" -->
           </div>
         </div>
 

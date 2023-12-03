@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <q-page padding>
     <div class="q-pa-md">
       <div class="q-pb-md text-h5">Stock</div>
@@ -154,4 +154,151 @@ export default defineComponent({
     // };
   },
 });
+</script> -->
+<template>
+  <q-page padding>
+    <!-- <div align="right" class="q-mr-sm">
+      <q-btn color="primary" icon="add" label="Add" href="/add" />
+    </div> -->
+    <div v-if="loading">Loading...</div>
+    <div v-else class="flex justify-center q-pt-sm" @submit="onSubmit">
+      <q-card v-for="item in equipment" :key="item.id" class="my-card q-mb-sm">
+        <q-img
+          :src="getImageUrl(item.img_url)"
+          :ratio="16 / 9"
+          spinner-color="primary"
+          spinner-size="82px"
+        />
+
+        <q-card-section class="q-pa-sm">
+          <div class="text-h5 text-primary">{{ item.id }}</div>
+          <div class="text-h5 text-primary">{{ item.equip_name }}</div>
+          <div class="text-h6 text-warning">{{ item.amount }}</div>
+          <div class="text-subtitle1">{{ item.description }}</div>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn icon="shopping_cart" color="positive" type="submit" />
+  <!-- <q-btn icon="delete" color="negative" @click="deleteItem(item)" /> -->
+        </q-card-actions>
+      </q-card>
+    </div>
+  </q-page>
+</template>
+
+<script>
+import { defineComponent, ref, onMounted } from "vue";
+import axios from "axios";
+
+export default defineComponent({
+  name: "EqPage",
+
+  data() {
+    return {
+      equipment: [],
+      loading: true,
+      model: null,
+      user_id:'',
+      id: '',
+      amount: '',
+      //description: '',
+    };
+  },
+
+  methods: {
+    getImageUrl(img_url) {
+      return `http://localhost:3000/api/file/${img_url}`;
+    },
+    navigateToUpdatePage(itemId) {
+      this.$router.push({ name: 'update', params: { id: itemId } });
+    },
+
+    // async deleteItem(item) {
+    //   const confirmDelete = window.confirm("Are you sure you want to delete this item?");
+    //   if (!confirmDelete) return;
+
+    //   const token = localStorage.getItem("accessToken");
+
+    //   try {
+    //     await axios.delete(
+    //       `http://localhost:3000/api/equipment/deleteEquip/${item.id}`,
+    //       {
+    //         headers: {
+    //           "x-access-token": token,
+    //         },
+    //       }
+    //     );
+
+    //     this.equipment = this.equipment.filter((e) => e.id !== item.id);
+
+    //     console.log("Item deleted successfully.");
+    //   } catch (error) {
+    //     console.error("Error deleting item:", error);
+    //   }
+    // },
+  },
+
+  async mounted() {
+    const token = localStorage.getItem("accessToken");
+    try {
+      const response = await axios.get(
+        "http://localhost:3000/api/equipment/stock",
+        {
+          headers: {
+            "x-access-token": token,
+          },
+        }
+      );
+
+      this.equipment = response.data;
+      this.loading = false;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      this.loading = false;
+    }
+  },
+
+  async onSubmit(){
+    try{
+      const AddToCart = {
+          equip_id: this.id,
+          user_id: this.user_id,
+          amount: this.amount,
+      };
+      const token = localStorage.getItem("accessToken");
+      const addCartResponse = await axios.post('http://localhost:3000/api/cart/addCart',AddToCart, {
+          headers: {
+            "x-access-token": token,
+          },
+      });
+      this.$q.notify({
+          color: "green-4",
+          textColor: "white",
+          icon: "cloud_done",
+          message: "Add to Cart Successfully",
+      });
+      this.$router.push("/EqTeacher");
+    }catch (error) {
+        console.log("Add to Cart error", error);
+
+        this.$q.notify({
+          color: "red-4",
+          textColor: "white",
+          icon: "warning",
+          message: "Add to Cart failed",
+        });
+    }
+    
+
+  }
+});
 </script>
+
+<style scoped>
+.my-card {
+  width: 185px;
+  max-width: 250px;
+  display: inline-block;
+  margin-right: 10px;
+}
+</style>

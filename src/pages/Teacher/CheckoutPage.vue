@@ -10,12 +10,12 @@
       <!-- Data completed -->
       <q-table
         title="List of Your Cart"
-        :columns="columns"
         :rows="rows"
+        :columns="columns"
         row-key="id"
         :pagination="paginations"
       >
-        <template #body="props">
+        <template v-slot:body="props">
           <q-tr :props="props">
             <q-td key="id" :props="props"> {{ props.row.id }}</q-td>
             <q-td key="user_id" :props="props"> {{ props.row.user_id }}</q-td>
@@ -29,54 +29,44 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, onMounted } from "vue";
 
 export default defineComponent({
   name: "CheckoutPage",
-  data() {
-    return {
-      loading: false, // Add loading indicator
-      rows: [],
-      columns: [
-        {
-          name: "id",
-          label: "ID",
-          field: "id",
-          align: "center",
-          sortable: true,
-        },
-        {
-          name: "user_id",
-          label: "User ID",
-          field: "user_id",
-          align: "left",
-          sortable: true,
-        },
-        {
-          name: "equip_name",
-          label: "Equipment Name",
-          field: "equip_name",
-          align: "left",
-          sortable: true,
-        },
-        {
-          name: "amount",
-          label: "Amount",
-          field: "amount",
-          align: "left",
-          sortable: true,
-        },
-      ],
-      paginations: { rowsPerPage: 7 },
-    };
-  },
-  
   setup() {
     const loading = ref(false); // Define loading indicator
-    const user_id = 123; // Replace with actual user_id
+    const rows = ref([]);
+    const columns = [
+      {
+        name: "id",
+        label: "ID",
+        align: "center",
+        sortable: true,
+      },
+      {
+        name: "user_id",
+        label: "User ID",
+        align: "left",
+        sortable: true,
+      },
+      {
+        name: "equip_name",
+        label: "Equipment Name",
+        align: "left",
+        sortable: true,
+      },
+      {
+        name: "amount",
+        label: "Amount",
+        align: "left",
+        sortable: true,
+      },
+    ];
+    const paginations = { rowsPerPage: 7 };
 
     const fetchData = async () => {
       loading.value = true;
+      const user_id = 123; // Replace with actual user_id
       const token = localStorage.getItem("accessToken");
 
       try {
@@ -97,7 +87,7 @@ export default defineComponent({
         // Handle data and image fetching here
         // ...
 
-        this.rows = data; // Update rows with the modified data
+        rows.value = data; // Update rows with the modified data
       } catch (error) {
         console.error("Error fetching data:", error);
         // Handle errors (e.g., display an error message)
@@ -106,20 +96,67 @@ export default defineComponent({
       }
     };
 
-    const age = ref(0);
+    const deleteData = async (id) => {
+      loading.value = true;
+      //const user_id = 123; // Replace with actual user_id
+      const token = localStorage.getItem("accessToken");
+      try {
+        const response = await axios.delete(
+          `http://localhost:3000/api/cart/deleteCart/${props.row.id}`,
+          {
+            headers: {
+              "x-access-token": token,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`);
+        }
+
+        const data = await response.json();
+        // Handle data and image fetching here
+        // ...
+
+        rows.value = data; // Update rows with the modified data
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Handle errors (e.g., display an error message)
+      } finally {
+        loading.value = false;
+      }
+    }
+
+    const confirmHistory = async () =>{
+        const AddToHistory = {
+          equip_id: this.equip_id,
+          cart_id:this.id,
+          user_id:this.user_id,
+          amount: this.amount,
+        };
+
+        const token = localStorage.getItem("accessToken");
+        const equipCreateResponse = await axios.post('http://localhost:3000/api//addEquip', equipData, {
+          headers: {
+            "x-access-token": token,
+          },
+        });
+        console.log('Equipment created successfully:', equipCreateResponse.data);
+
+        this.$router.push('/test');
+    }
+    onMounted(() => {
+      // Uncomment the line below if you want to fetch data when the component is mounted
+      // fetchData();
+    });
+
     return {
-      val: ref(false),
-      age: age,
-      loading: loading, // Export loading indicator
+      loading,
+      rows,
+      columns,
+      paginations,
+      fetchData,
     };
-  },
-  methods: {
-    increase() {
-      this.age += 1;
-    },
-    decrease() {
-      this.age -= 1;
-    },
   },
 });
 </script>

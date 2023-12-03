@@ -116,6 +116,26 @@ export default defineComponent({
   },
   methods: {
     async onSubmit() {
+         const response = await this.$axios.get(`http://localhost:3000/api/auth/${this.uname}`);
+        let db_username
+        if (response.data.record !== undefined){
+          db_username = response.data.record.username;
+        }
+        else{
+          db_username = null
+        }
+
+        console.log(response.data);
+
+        if (this.uname === db_username) {
+          this.$q.notify({
+            color: "red-4",
+            textColor: "white",
+            icon: "warning",
+            message: "This username already exists. Please choose a different username.",
+          });
+          return;
+        }
 
       if (this.password !== this.cpassword) {
         this.$q.notify({

@@ -30,7 +30,7 @@
           <q-input Outlined v-model="amount" label="Amount" />
         </div>
         <div>
-          <q-input Outlined v-model="descript" label="Description" />
+          <q-input Outlined v-model="description" label="Description" />
         </div>
 
         <div>
@@ -51,7 +51,7 @@ export default {
       model: null,
       name: '',
       amount: '',
-      descript: '',
+      description: '',
     };
   },
   methods: {
@@ -70,10 +70,16 @@ export default {
           description: this.description,
         };
 
-        const equipCreateResponse = await axios.post('http://localhost:3000/api/equipment/addEquip', equipData);
+        const token = localStorage.getItem("accessToken");
+        const equipCreateResponse = await axios.post('http://localhost:3000/api/equipment/addEquip', equipData, {
+          headers: {
+            "x-access-token": token,
+            'Content-Type': 'application/json',
+          },
+        });
         console.log('Equipment created successfully:', equipCreateResponse.data);
 
-        this.$router.push('/tool');
+        this.$router.push('/EqStaff');
 
       } catch (error) {
         console.error('Error creating equipment:', error);

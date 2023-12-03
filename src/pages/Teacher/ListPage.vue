@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
     <q-table
-        title="List of Your Cart"
+        title="List of Your History"
         :columns="columns"
         :rows="rows"
         row-key="id"
