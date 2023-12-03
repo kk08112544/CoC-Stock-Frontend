@@ -96,55 +96,6 @@ export default defineComponent({
       }
     };
 
-    const deleteData = async (id) => {
-      loading.value = true;
-      //const user_id = 123; // Replace with actual user_id
-      const token = localStorage.getItem("accessToken");
-      try {
-        const response = await axios.delete(
-          `http://localhost:3000/api/cart/deleteCart/${props.row.id}`,
-          {
-            headers: {
-              "x-access-token": token,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`Request failed with status ${response.status}`);
-        }
-
-        const data = await response.json();
-        // Handle data and image fetching here
-        // ...
-
-        rows.value = data; // Update rows with the modified data
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        // Handle errors (e.g., display an error message)
-      } finally {
-        loading.value = false;
-      }
-    }
-
-    const confirmHistory = async () =>{
-        const AddToHistory = {
-          equip_id: this.equip_id,
-          cart_id:this.id,
-          user_id:this.user_id,
-          amount: this.amount,
-        };
-
-        const token = localStorage.getItem("accessToken");
-        const equipCreateResponse = await axios.post('http://localhost:3000/api//addEquip', equipData, {
-          headers: {
-            "x-access-token": token,
-          },
-        });
-        console.log('Equipment created successfully:', equipCreateResponse.data);
-
-        this.$router.push('/test');
-    }
     onMounted(() => {
       // Uncomment the line below if you want to fetch data when the component is mounted
       // fetchData();

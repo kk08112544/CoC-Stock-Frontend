@@ -93,14 +93,14 @@ export default defineComponent({
       return `http://localhost:3000/api/file/${img_url}`;
     },
     navigateToUpdatePage(itemId) {
-      this.$router.push({ name: 'test', params: { id: itemId } });
+      this.$router.push({ name: 'addcart', params: { id: itemId } });
     },
   },
 
   async mounted() {
     const token = localStorage.getItem("accessToken");
     try {
-      const response = await axios.get("http://localhost:3000/api/equipment", {
+      const response = await axios.get("http://localhost:3000/api/equipment/stock", {
         headers: {
           "x-access-token": token,
         },
