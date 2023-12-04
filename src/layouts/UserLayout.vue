@@ -13,7 +13,7 @@
 
         <q-toolbar-title> CoC Stock Application </q-toolbar-title>
 
-        <div> {{ name }}</div>
+        <!-- <div>test {{ $q.version }}</div> -->
         <q-btn
           flat
           dense
@@ -51,22 +51,36 @@ import EssentialLink from "components/EssentialLink.vue";
 const linksList = [
   {
     title: "Home",
-    caption: "manage equipment",
+    caption: "All equipment",
     icon: "home",
-    link: "/EqStaff",
+    link: "/user/home",
+    color: "primary",
+  },
+  // {
+  //   title: "I don't what's you do",
+  //   caption: "all cart may be?",
+  //   icon: "shopping_cart",
+  //   link: "/user/EqTeacher",
+  //   color: "primary",
+  // },
+  {
+    title: "Cart",
+    caption: "Add To Cart",
+    icon: "shopping_cart",
+    link: "/user/cart",
     color: "primary",
   },
   {
-    title: "Dashboard",
-    caption: "update user status",
-    icon: "dashboard",
-    link: "/board",
+    title: "History",
+    caption: "current status",
+    icon: "history",
+    link: "/user/history",
     color: "primary",
   },
 ];
 
 export default defineComponent({
-  name: "MainLayout",
+  name: "UserLayout",
 
   components: {
     EssentialLink,
